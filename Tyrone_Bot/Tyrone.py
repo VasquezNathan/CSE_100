@@ -3,7 +3,7 @@ import os
 from gtts import *
 from asyncio import sleep
 client = discord.Client()
-n_words = ["bad", "bad", "bad", "N bad"]
+n_words = ["Words", "to", "look", "for"]
 
 @client.event
 async def on_ready():
