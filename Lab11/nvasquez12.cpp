@@ -7,7 +7,7 @@ struct Vertex{
 };
 
 
-int extractMin(std::list<Vertex> *graph, int size, int *parents, bool *inSearch, bool *visited);
+void extractMin(std::list<Vertex> *graph, int size, int *parents, bool *inSearch);
 void printGraph(std::list<Vertex> *graph, int size); // prints graph with weights
 void mstPrim(std::list<Vertex> *graph, int size);
 
@@ -29,19 +29,17 @@ int main(int argc, char** argv) {
         std::cin >> source >> destination >> weight;
         vertex = {destination, weight};
         graph[source].push_back(vertex);
-        // vertex = {source, weight, INT_MAX, -1}; // this and the following line for undirectioned.
-        // graph[destination].push_back(vertex);
+        vertex = {source, weight}; // this and the following line for undirectioned.
+        graph[destination].push_back(vertex);
     }
-    printGraph(graph, num_of_verticies);
-    std::cout << std::endl;
-
+    // printGraph(graph, num_of_verticies);
     mstPrim(graph, num_of_verticies);
 
     delete [] graph;
     return 0;
 }
 
-int extractMin(std::list<Vertex> *graph, int size, int *parents, bool *inSearch, bool *visited) {
+void extractMin(std::list<Vertex> *graph, int size, int *parents, bool *inSearch) {
     int min = INT_MAX;
     int index = 0;
     int child = 0;
@@ -51,35 +49,35 @@ int extractMin(std::list<Vertex> *graph, int size, int *parents, bool *inSearch,
                 if ((*it).weight < min && !(inSearch[(*it).value])) {
                     min = (*it).weight;
                     child = (*it).value;
-                    index++;
+                    index = i;
                 }
             }
         }
     }
-
+    // std::cout << "min: " << min << " parent of min: " << index <<  " child: " << child << std::endl;
     inSearch[child] = true;
     parents[child] = index;
-    for (int i = 0; i < size - 1; i++) {
-        std::cout << parents[i] << " ";
-    }
-    std::cout << std::endl;
-    return index;
+    // for (int i = 1; i < size; i++) {
+    //     std::cout << parents[i] << std::endl;
+    // }
+    // std::cout << std::endl;
 }
 
 void mstPrim(std::list<Vertex> *graph, int size) {
     bool inSearch[size];
-    bool visited[size];
-    int parents[size-1];
+    int parents[size];
     int u;
     for (int i = 0; i < size; i++) {
         inSearch[i] = false;
-        visited[i] = false;
+        parents[i] = 0;
     }
     inSearch[0] = true;
     for (int i = 0; i < size; i++) {
-        extractMin(graph, size, parents, inSearch, visited);
+        extractMin(graph, size, parents, inSearch);
     }
-   
+    for (int i = 1; i < size; i++) {
+        std::cout << parents[i] << std::endl;
+    }
 
 }
 
@@ -95,7 +93,6 @@ void printGraph(std::list<Vertex> *graph, int size) {
 
 /*
 test case from instructions:
-
 9
 14
 0 1 40
