@@ -37,8 +37,6 @@ int main(int argc, char** argv) {
 
     mstPrim(graph, num_of_verticies);
 
-    delete Vertex
-    delete [] visited;
     delete [] graph;
     return 0;
 }
@@ -50,17 +48,21 @@ int extractMin(std::list<Vertex> *graph, int size, int *parents, bool *inSearch,
     for (int i = 0; i < size; i++) {
         if (inSearch[i]) {
             for(std::list<Vertex>::iterator it = graph[i].begin(); it != graph[i].end(); ++it) {
-                if ((*it).value < min) {
+                if ((*it).weight < min && !(inSearch[(*it).value])) {
                     min = (*it).weight;
                     child = (*it).value;
                     index++;
-
                 }
             }
         }
     }
+
     inSearch[child] = true;
     parents[child] = index;
+    for (int i = 0; i < size - 1; i++) {
+        std::cout << parents[i] << " ";
+    }
+    std::cout << std::endl;
     return index;
 }
 
@@ -68,15 +70,17 @@ void mstPrim(std::list<Vertex> *graph, int size) {
     bool inSearch[size];
     bool visited[size];
     int parents[size-1];
-
+    int u;
     for (int i = 0; i < size; i++) {
         inSearch[i] = false;
         visited[i] = false;
     }
     inSearch[0] = true;
     for (int i = 0; i < size; i++) {
-        u = extractMin(graph[i], size, parents, inSearch, visited);
+        extractMin(graph, size, parents, inSearch, visited);
     }
+   
+
 }
 
 void printGraph(std::list<Vertex> *graph, int size) {
